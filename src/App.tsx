@@ -1,35 +1,79 @@
 import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import Container from './components/container/container'
 
-import { Droppable } from "./Droppable";
-import { Draggable } from "./Draggable";
+import {
+  DndContext,
+  DragEndEvent,
+  DragMoveEvent,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  closestCorners,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+
+
+type DNDtype = {
+  id: UniqueIdentifier;
+  title: string;
+  item: {
+    id: UniqueIdentifier;
+    title: string;
+  }[];
+};
 
 function App() {
-  const containers = ["A", "B", "C"];
-  const [parent, setParent] = useState(null);
-  const draggableMarkup = <Draggable id="draggable">Drag me</Draggable>;
+  const [container, setContainer] = useState<DNDtype>([]);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [currentContainerId, setCurrentContainerId] =
+    useState<UniqueIdentifier>();
+  const [containerName, setContainerName] = useState("");
+  const [itemName, setItemName] = useState("");
+  const [showAddContainerModal, setShowAddContainerModal] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
 
-  return (
-    <DndContext onDragEnd={handleDragEnd}>
-      {parent === null ? draggableMarkup : null}
-
-      {containers.map((id) => (
-        // We updated the Droppable component so it would accept an `id`
-        // prop and pass it to `useDroppable`
-        <Droppable key={id} id={id}>
-          {parent === id ? draggableMarkup : "Drop here"}
-        </Droppable>
-      ))}
-    </DndContext>
+  //dnd handlers
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
-  function handleDragEnd(event: any) {
-    const { over } = event;
+  const handleDragStart = (event: DragStartEvent) => {};
 
-    // If the item is dropped over a container, set it as the parent
-    // otherwise reset the parent to `null`
-    setParent(over ? over.id : null);
-  }
+  const handleDragMove = (event: DragMoveEvent) => {};
+
+  const handleDragEnd = (event: DragEndEvent) => {};
+
+  return (
+    <div className="mx-auto max-w-7xl">
+      <div className="flex item-center justify-between gap-y-2">
+        <h1 className="text-3xl font-bold">Drag Track</h1>
+      </div>
+      <div className="mt-10">
+        <div className="grid grid-cols-3 gap-6">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragMove={handleDragMove}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={containers.map((container) => {
+              container.id
+            })}>
+              {containers.map((container) => (
+                <Container key={container.id}></Container>
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
+      </div>
+    </div>
+  );
 }
-
 export default App;
