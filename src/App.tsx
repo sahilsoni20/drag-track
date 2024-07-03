@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/core";
 import {
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
@@ -38,15 +39,15 @@ function App() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
-    if(type === 'container') {
-      return containers.find((container) => container.id === id)
+    if (type === "container") {
+      return containers.find((container) => container.id === id);
     }
-    if(type === 'item') {
-     return containers.find((container) => {
-      return containers.find((item) => item.id === id)
-     })
+    if (type === "item") {
+      return containers.find((container) => {
+        return containers.find((item) => item.id === id);
+      });
     }
-  }
+  };
 
   //dnd handlers
   const sensors = useSensors(
@@ -74,14 +75,40 @@ function App() {
       active.id !== over.id
     ) {
       //find the active container and hover that
-      const activeContainer  = findValueOfItems(active.id, 'item')
-      const overContainer = findValueOfItems(over.id, 'item')
+      const activeContainer = findValueOfItems(active.id, "item");
+      const overContainer = findValueOfItems(over.id, "item");
 
-      //if the active or over container is undefined (dosent exsist) then return 
-      if(!activeContainer || !overContainer ) {
-        return const activeContainerIndex = containers.findIndex(
-          
-        ) 
+      // if the active or over container is undefined (dosent exsist) then return
+      if (!activeContainer || !overContainer) return;
+      const activeContainerIndex = containers.findIndex(
+        (container) => container.id === activeContainer.id
+      );
+      const overContainerIndex = containers.findIndex(
+        (container) => container.id === overContainer.id
+      );
+
+      //find the index of the active and over item
+      const activeItemIndex = activeContainer.items.findIndex(
+        (item) => item.id === active.id
+      );
+
+      const overItemIndex = overContainer.items.findIndex(
+        (item) => item.id === over.id
+      );
+
+      //check if dragging in the same container
+      if (activeContainerIndex === overContainerIndex) {
+        let newItems = [...containers];
+        newItems[activeContainerIndex].items = arrayMove(
+          newItems[activeContainerIndex].items,
+          activeItemIndex,
+          overItemIndex
+        );
+        setContainers(newItems);
+      } else {
+        //in different container
+        let newItems  = [...containers];
+        const removedItems = 
       }
     }
   };
