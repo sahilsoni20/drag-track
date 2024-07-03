@@ -107,9 +107,58 @@ function App() {
         setContainers(newItems);
       } else {
         //in different container
-        let newItems  = [...containers];
-        const removedItems = 
+        let newItems = [...containers];
+        const removedItems = newItems[activeContainerIndex].items.splice(
+          activeItemIndex,
+          1
+        );
+        newItems[overContainerIndex].items.splice(
+          overItemIndex,
+          0,
+          removedItems
+        );
+        setContainers(newItems);
       }
+    }
+
+    //handling item drop into a container
+    if (
+      active.id.toString().includes("item") &&
+      over?.id.toString().includes("container") &&
+      active &&
+      over &&
+      active.id !== over.id
+    ) {
+      //find the active and over container
+      const activeContainer = findValueOfItems(active.id, "item");
+      const overContainer = findValueOfItems(over.id, "container");
+
+      //if the active or over is undefined we are going to return 
+      if(!activeContainer === !overContainer) return;
+
+      //find the index of the active and over container
+      const activeContainerIndex = containers.findIndex(
+        (container) => container.id === activeContainer.id
+      )
+
+      const overContainerIndex = containers.findIndex(
+        (container) => container.id === overContainer.id
+      )
+
+      //find the index of active in active container
+      const activeItemIndex = activeContainer.items.findIndex(
+        (item) => item.id === active.id
+      )
+
+      //remove the active item from active container
+      let newItems = [...containers];
+      const [removedItems] = newItems[activeContainerIndex].splice(
+        activeItemIndex,
+        1
+      )
+      newItems[overContainerIndex].items.push(removedItems)
+      setContainers(newItems)
+
     }
   };
 
