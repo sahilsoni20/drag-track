@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Container from './components/container/container'
+import { Items, Input, Button, Container } from "./components";
 
 import {
   DndContext,
@@ -13,8 +13,10 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 
 type DNDtype = {
   id: UniqueIdentifier;
@@ -26,7 +28,7 @@ type DNDtype = {
 };
 
 function App() {
-  const [container, setContainer] = useState<DNDtype>([]);
+  const [containers, setContainers] = useState<DNDtype>([]);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [currentContainerId, setCurrentContainerId] =
     useState<UniqueIdentifier>();
@@ -34,6 +36,17 @@ function App() {
   const [itemName, setItemName] = useState("");
   const [showAddContainerModal, setShowAddContainerModal] = useState(false);
   const [showAddItemModal, setShowAddItemModal] = useState(false);
+
+  const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
+    if(type === 'container') {
+      return containers.find((container) => container.id === id)
+    }
+    if(type === 'item') {
+     return containers.find((container) => {
+      return containers.find((item) => item.id === id)
+     })
+    }
+  }
 
   //dnd handlers
   const sensors = useSensors(
@@ -43,9 +56,35 @@ function App() {
     })
   );
 
-  const handleDragStart = (event: DragStartEvent) => {};
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const { id } = event;
+    setActiveId(id);
+  };
 
-  const handleDragMove = (event: DragMoveEvent) => {};
+  const handleDragMove = (event: DragMoveEvent) => {
+    const { active, over } = event;
+
+    //handle item sorting
+    if (
+      active.id.toString().includes("item") &&
+      over?.id.toString().includes("item") &&
+      active &&
+      over &&
+      active.id !== over.id
+    ) {
+      //find the active container and hover that
+      const activeContainer  = findValueOfItems(active.id, 'item')
+      const overContainer = findValueOfItems(over.id, 'item')
+
+      //if the active or over container is undefined (dosent exsist) then return 
+      if(!activeContainer || !overContainer ) {
+        return const activeContainerIndex = containers.findIndex(
+          
+        ) 
+      }
+    }
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {};
 
@@ -63,11 +102,31 @@ function App() {
             onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
           >
-            <SortableContext items={containers.map((container) => {
-              container.id
-            })}>
+            <SortableContext
+              items={containers.map((i) => {
+                i.id;
+              })}
+            >
               {containers.map((container) => (
-                <Container key={container.id}></Container>
+                <Container
+                  key={container.id}
+                  title={container.title}
+                  id={container.id}
+                  onAddItem={() => {}}
+                >
+                  {/* for internal items */}
+                  <SortableContext items={container.items.map((i) => i.id)}>
+                    <div className="flex items-start flex-col gap-y-4">
+                      {container.items.map((item) => (
+                        <Items
+                          key={item.id}
+                          id={item.id}
+                          title={item.title}
+                        ></Items>
+                      ))}
+                    </div>
+                  </SortableContext>
+                </Container>
               ))}
             </SortableContext>
           </DndContext>

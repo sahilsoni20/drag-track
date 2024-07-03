@@ -1,8 +1,8 @@
 
-const button = () => {
+const Button = () => {
   return (
     <div>button</div>
   )
 }
 
-export default button
+export default Button
