@@ -28,7 +28,7 @@ const Items = ({ id, title }: ItemProps) => {
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={clsx(
-        "px-2 py-4 bg-white shadow-md rounded-xl w-full border border-transparent hover:border" &&
+        "px-2 py-4 bg-white text-black shadow-md rounded-xl w-full border border-transparent hover:border" &&
           isDragging &&
           "opacity-50"
       )}

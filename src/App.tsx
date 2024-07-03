@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Container } from './components'
+import { Items, Container } from "./components";
+import { v4 as uuidv4 } from 'uuid';
+
 
 import {
   DndContext,
@@ -19,7 +21,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
-type DNDtype = {
+type DNDType = {
   id: UniqueIdentifier;
   title: string;
   item: {
@@ -29,14 +31,35 @@ type DNDtype = {
 };
 
 function App() {
-  const [containers, setContainers] = useState<DNDtype>([]);
+  const [containers, setContainers] = useState<DNDType[]>([
+    {
+      id: `container-${uuidv4()}`,
+      title: 'Container 1',
+      item: [
+        {
+          id: `item-${uuidv4()}`,
+          title: 'Item 1'
+        }
+      ]
+    },
+    {
+      id: `container-${uuidv4()}`,
+      title: 'Container 2',
+      item: [
+        {
+          id: `item-${uuidv4()}`,
+          title: 'Item 2'
+        }
+      ]
+    }
+  ]);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const [currentContainerId, setCurrentContainerId] =
-    useState<UniqueIdentifier>();
-  const [containerName, setContainerName] = useState("");
-  const [itemName, setItemName] = useState("");
-  const [showAddContainerModal, setShowAddContainerModal] = useState(false);
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  // const [currentContainerId, setCurrentContainerId] =
+  //   useState<UniqueIdentifier>();
+  // const [containerName, setContainerName] = useState("");
+  // const [itemName, setItemName] = useState("");
+  // const [showAddContainerModal, setShowAddContainerModal] = useState(false);
+  // const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
     if (type === "container") {
@@ -133,32 +156,31 @@ function App() {
       const activeContainer = findValueOfItems(active.id, "item");
       const overContainer = findValueOfItems(over.id, "container");
 
-      //if the active or over is undefined we are going to return 
-      if(!activeContainer === !overContainer) return;
+      //if the active or over is undefined we are going to return
+      if (!activeContainer === !overContainer) return;
 
       //find the index of the active and over container
       const activeContainerIndex = containers.findIndex(
         (container) => container.id === activeContainer.id
-      )
+      );
 
       const overContainerIndex = containers.findIndex(
         (container) => container.id === overContainer.id
-      )
+      );
 
       //find the index of active in active container
       const activeItemIndex = activeContainer.items.findIndex(
         (item) => item.id === active.id
-      )
+      );
 
       //remove the active item from active container
       let newItems = [...containers];
       const [removedItems] = newItems[activeContainerIndex].splice(
         activeItemIndex,
         1
-      )
-      newItems[overContainerIndex].items.push(removedItems)
-      setContainers(newItems)
-
+      );
+      newItems[overContainerIndex].items.push(removedItems);
+      setContainers(newItems);
     }
   };
 
@@ -169,7 +191,7 @@ function App() {
       <div className="flex item-center justify-between gap-y-2">
         <h1 className="text-3xl font-bold">Drag Track</h1>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 text-black">
         <div className="grid grid-cols-3 gap-6">
           <DndContext
             sensors={sensors}
