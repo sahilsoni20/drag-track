@@ -1,3 +1,5 @@
+export * from './types'
+
 export * from './utilities/dnd/handleDragStart'
 export * from './utilities/dnd/handleDragMove'
 export * from './utilities/dnd/handleDragEnd'
@@ -15,3 +17,6 @@ export * from './utilities/container/findContainerTitle'
 export * from './utilities/container/onAddContainer'
 export * from './utilities/container/onDeleteContaienr'
 export * from './utilities/container/onEditContainer'
+
+export * from './utilities/helpers'
+export * from './utilities/validation'
