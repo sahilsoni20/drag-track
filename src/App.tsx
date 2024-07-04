@@ -1,27 +1,27 @@
 import { useState } from "react";
-import { Items, Input, Button, Container, Modal } from "./components";
+import { Button, Container, Input, Items, Modal } from "./components";
 
 import {
   findContainerItem,
-  findContainerNameByItemId,
+  findItemTitle,
+  handleDragEnd,
+  handleDragMove,
+  handleDragStart,
   onAddContainer,
-  useContainerStore,
-  isContainerNameEmpty,
   onAddItem,
-  isItemNameEmpty,
-  isEditingContainerNameChanged,
-  onDeleteItem,
+  onDeleteContainer,
   onEditContainer,
   onEditItem,
-  isEditingItemNameChanged,
-  handleDragStart,
-  handleDragMove,
-  handleDragEnd,
   openEditItemModal,
-  onDeleteContainer,
   openEditContainerModal,
-  findItemTitle,
+  useContainerStore,
   findContainerTitle,
+  onDeleteItem,
+  findContainerNameByItemId,
+  isContainerNameEmpty,
+  isItemNameEmpty,
+  isEditingContainerNameChanged,
+  isEditingItemNameChanged,
 } from "./lib";
 
 import {
@@ -34,14 +34,13 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-
 import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { Layout, Text, Trash2 } from "lucide-react";
 
-function App() {
+export default function App() {
   const [containerName, setContainerName] = useState("");
   const { containers, setContainers, addContainer } = useContainerStore();
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
@@ -54,11 +53,11 @@ function App() {
   const [editingContainer, setEditingContainer] =
     useState<UniqueIdentifier | null>(null);
   const [editingContainerName, setEditingContainerName] = useState("");
+
   const [showEditItemModal, setShowEditItemModal] = useState(false);
   const [editingItem, setEditingItem] = useState<UniqueIdentifier | null>(null);
   const [editingItemName, setEditingItemName] = useState("");
 
-  //dnd handlers
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -86,12 +85,11 @@ function App() {
             placeholder="Container Title"
             name="containername"
             value={containerName}
-            onChange={(event) => setContainerName(event.target.name)}
+            onChange={(event) => setContainerName(event.target.value)}
           />
           <Button
-            bgLight={false}
             fullWidth={true}
-            label="Add Container"
+            label="Add container"
             onClick={() =>
               onAddContainer(
                 containerName,
@@ -104,21 +102,19 @@ function App() {
           />
         </div>
       </Modal>
-
       <Modal showModal={showAddItemModal} setShowModal={setShowAddItemModal}>
-        <div className="flex flex-col w-full items-start text-center mx-auto">
+        <div className="flex flex-col w-full items-start gap-y-4">
           <h1 className="text-gray-800 text-xl md:text-2xl font-bold text-center mx-auto">
-            Add Cart
+            Add Card
           </h1>
           <Input
             type="text"
             placeholder="Card Title"
             name="card-name"
             value={itemName}
-            onChange={(event) => setItemName(event.target.name)}
+            onChange={(event) => setItemName(event.target.value)}
           />
           <Button
-            bgLight={false}
             fullWidth={true}
             label="Add Card"
             onClick={() =>
@@ -135,26 +131,24 @@ function App() {
           />
         </div>
       </Modal>
-
       <Modal
         showModal={showEditContainerModal}
         setShowModal={setShowEditContainerModal}
       >
-        <div className="flex flex-col w-full items-start text-center mx-auto">
+        <div className="flex flex-col w-full items-start gap-y-4">
           <h1 className="text-gray-800 text-xl md:text-2xl font-bold text-center mx-auto">
             Edit Container
           </h1>
           <Input
             type="text"
             placeholder="Container Title"
-            name="container-name"
+            name="containername"
             value={editingContainerName}
             onChange={(event) => setEditingContainerName(event.target.value)}
           />
           <Button
-            bgLight={false}
             fullWidth={true}
-            label="Edit Container"
+            label="Edit container"
             onClick={() =>
               onEditContainer(
                 editingContainerName,
@@ -176,7 +170,6 @@ function App() {
           />
         </div>
       </Modal>
-
       <Modal showModal={showEditItemModal} setShowModal={setShowEditItemModal}>
         <div className="flex justify-between">
           <div className="flex items-start gap-3">
@@ -193,7 +186,6 @@ function App() {
           </div>
           <Button
             bgLight={true}
-            fullWidth={false}
             label=""
             icon={Trash2}
             onClick={() =>
@@ -222,7 +214,7 @@ function App() {
             value={editingItemName}
             onChange={(event) => setEditingItemName(event.target.value)}
           />{" "}
-          <div className="flex justify-between w-full ga-3 mt-2">
+          <div className="flex justify-between w-full gap-3 mt-2">
             <Button
               bgLight={true}
               fullWidth={true}
@@ -231,7 +223,6 @@ function App() {
               onClick={() => setShowEditItemModal(false)}
             />
             <Button
-              bgLight={false}
               fullWidth={true}
               label="Save"
               onClick={() =>
@@ -255,7 +246,6 @@ function App() {
           </div>
         </div>
       </Modal>
-
       <div className="flex items-center justify-between gap-y-2">
         <h1 className="text-gray-800 text-xl md:text-3xl font-bold">
           DragTrack
@@ -265,7 +255,6 @@ function App() {
           label="Add Container"
         />
       </div>
-
       <div className="mt-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <DndContext
@@ -327,7 +316,6 @@ function App() {
                 </Container>
               ))}
             </SortableContext>
-            
             <DragOverlay adjustScale={false}>
               {activeId && activeId.toString().includes("item") && (
                 <Items
@@ -352,4 +340,3 @@ function App() {
     </div>
   );
 }
-export default App;
