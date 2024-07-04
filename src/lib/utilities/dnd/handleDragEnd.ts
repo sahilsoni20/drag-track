@@ -1,4 +1,4 @@
-import { DragEndEvent } from "@dnd-kit/core";
+import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { ContainerType } from "../../types";
 import { arrayMove } from "@dnd-kit/sortable";
 import { findValueOfItems } from "../findValueOfItems";
@@ -6,7 +6,8 @@ import { findValueOfItems } from "../findValueOfItems";
 export function handleDragEnd(
   event: DragEndEvent,
   containers: ContainerType[],
-  setContainers: (containers: ContainerType[]) => void
+  setContainers: (containers: ContainerType[]) => void,
+  setActiveId: (id: UniqueIdentifier | null) => void
 ) {
   const { active, over } = event;
 
@@ -49,11 +50,11 @@ export function handleDragEnd(
 
     //find active and over container index
     const activeContainerIndex = containers.findIndex(
-      (container) => container.id === active.id
+      (container) => container.id === activeContainer.id
     );
 
     const overContainerIndex = containers.findIndex(
-      (container) => container.id === over.id
+      (container) => container.id === overContainer.id
     );
 
     //find the index of active and over item
@@ -89,25 +90,25 @@ export function handleDragEnd(
   //handling drop item into container
   if (
     active.id.toString().includes("item") &&
-    over?.id.toString().includes("item") &&
+    over?.id.toString().includes("container") &&
     active &&
     over &&
     active.id !== over.id
   ) {
     //find active container and over container
     const activeContainer = findValueOfItems(active.id, "items", containers);
-    const overContainer = findValueOfItems(over.id, "items", containers);
+    const overContainer = findValueOfItems(over.id, "container", containers);
 
     //if the active or over container is undefiend we gonna return something something
     if (!activeContainer || !overContainer) return;
 
     //find active and over container index
     const activeContainerIndex = containers.findIndex(
-      (container) => container.id === active.id
+      (container) => container.id === activeContainer.id
     );
 
     const overContainerIndex = containers.findIndex(
-      (container) => container.id === over.id
+      (container) => container.id === overContainer.id
     );
 
     //find the index of active item in active container
@@ -123,4 +124,5 @@ export function handleDragEnd(
     newItems[overContainerIndex].items.push(removedItem);
     setContainers(newItems);
   }
+  setActiveId(null)
 }

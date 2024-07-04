@@ -39,7 +39,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { Layout, Text } from "lucide-react";
+import { Layout, Text, Trash2 } from "lucide-react";
 
 function App() {
   const [containerName, setContainerName] = useState("");
@@ -176,7 +176,7 @@ function App() {
           />
         </div>
       </Modal>
-      
+
       <Modal showModal={showEditItemModal} setShowModal={setShowEditItemModal}>
         <div className="flex justify-between">
           <div className="flex items-start gap-3">
@@ -193,8 +193,9 @@ function App() {
           </div>
           <Button
             bgLight={true}
-            fullWidth={true}
-            label="Add Card"
+            fullWidth={false}
+            label=""
+            icon={Trash2}
             onClick={() =>
               onDeleteItem(
                 editingItem,
@@ -204,15 +205,9 @@ function App() {
                 setShowEditItemModal
               )
             }
-            disabled={
-              !isEditingContainerNameChanged(
-                editingContainerName,
-                editingContainer,
-                containers
-              )
-            }
           />
         </div>
+
         <div className="mt-8">
           <div className="flex gap-3 mb-3">
             <Text size={18} className="mt-1" />
@@ -225,7 +220,7 @@ function App() {
             placeholder="Card Title"
             name="card-name"
             value={editingItemName}
-            onChange={(event) => setEditingItemName(event.target.name)}
+            onChange={(event) => setEditingItemName(event.target.value)}
           />{" "}
           <div className="flex justify-between w-full ga-3 mt-2">
             <Button
@@ -260,6 +255,7 @@ function App() {
           </div>
         </div>
       </Modal>
+
       <div className="flex items-center justify-between gap-y-2">
         <h1 className="text-gray-800 text-xl md:text-3xl font-bold">
           DragTrack
@@ -269,6 +265,7 @@ function App() {
           label="Add Container"
         />
       </div>
+
       <div className="mt-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <DndContext
@@ -292,7 +289,7 @@ function App() {
                     setShowAddItemModal(true);
                     setCurrentContainerId(container.id);
                   }}
-                  onEditContainer={() =>
+                  onEdit={() =>
                     openEditContainerModal(
                       setEditingContainer,
                       setEditingContainerName,
@@ -301,7 +298,7 @@ function App() {
                       container.title
                     )
                   }
-                  onDeleteContainer={() =>
+                  onDelete={() =>
                     onDeleteContainer(container.id, containers, setContainers)
                   }
                 >
@@ -330,6 +327,7 @@ function App() {
                 </Container>
               ))}
             </SortableContext>
+            
             <DragOverlay adjustScale={false}>
               {activeId && activeId.toString().includes("item") && (
                 <Items
