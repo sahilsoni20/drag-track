@@ -38,7 +38,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { Layout, Text, Trash2 } from "lucide-react";
+import { Layout, Text, Trash2, FolderOpen } from "lucide-react";
 
 export default function App() {
   const [containerName, setContainerName] = useState("");
@@ -256,6 +256,11 @@ export default function App() {
         />
       </div>
       <div className="mt-10">
+        {containers.length === 0 && (
+          <div className="text-center text-gray-500 flex flex-col justify-center mt-72 md:text-base md:flex-row text-sm">
+            <FolderOpen className="mr-4 ml-20"/> No containers available. Add a new container to get started.
+          </div>
+        )}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <DndContext
             sensors={sensors}
