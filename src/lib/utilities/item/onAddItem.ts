@@ -6,10 +6,10 @@ export function onAddItem(
   setItemName: (name: string) => void,
   setShowAddItemModal: (show: boolean) => void,
   containers: ContainerType[],
-  setContainer: (containers: ContainerType[]) => void,
-  currentContainerId: UniqueIdentifier | null
+  setContainers: (containers: ContainerType[]) => void,
+  currentContainerId: UniqueIdentifier | undefined
 ) {
-  if (itemName) return;
+  if (!itemName) return;
   const id = `item-${Math.random() * 1000}`;
   const container = containers.find((item) => item.id === currentContainerId);
   if (!container) return;
@@ -17,7 +17,7 @@ export function onAddItem(
     id,
     title: itemName,
   });
-  setContainer([...containers]);
+  setContainers([...containers]);
   setItemName("");
   setShowAddItemModal(false);
 }

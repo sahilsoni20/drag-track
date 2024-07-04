@@ -41,8 +41,8 @@ export function handleDragEnd(
     active.id !== over.id
   ) {
     //find active container and over container
-    const activeContainer = findValueOfItems(containers, active.id, "items");
-    const overContainer = findValueOfItems(containers, over.id, "items");
+    const activeContainer = findValueOfItems(active.id, "items", containers);
+    const overContainer = findValueOfItems(over.id, "items", containers);
 
     //if the active or over container is undefiend we gonna return something something
     if (!activeContainer || !overContainer) return;
@@ -95,8 +95,8 @@ export function handleDragEnd(
     active.id !== over.id
   ) {
     //find active container and over container
-    const activeContainer = findValueOfItems(containers, active.id, "items");
-    const overContainer = findValueOfItems(containers, over.id, "items");
+    const activeContainer = findValueOfItems(active.id, "items", containers);
+    const overContainer = findValueOfItems(over.id, "items", containers);
 
     //if the active or over container is undefiend we gonna return something something
     if (!activeContainer || !overContainer) return;
@@ -120,7 +120,7 @@ export function handleDragEnd(
       activeItemIndex,
       1
     );
-    newItems[overContainerIndex].items.push(removedItem)
+    newItems[overContainerIndex].items.push(removedItem);
     setContainers(newItems);
   }
 }

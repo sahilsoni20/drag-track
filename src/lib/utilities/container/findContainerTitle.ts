@@ -6,7 +6,7 @@ export function findContainerTitle(
   containers: ContainerType[],
   id: UniqueIdentifier | undefined
 ) {
-  const container = findValueOfItems(containers, id, "item");
+  const container = findValueOfItems(id, "item", containers);
   if (!container) return "";
   return container.title;
 }

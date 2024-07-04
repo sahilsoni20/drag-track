@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import FocusTrap from "focus-trap-react";
 import clsx from "clsx";
 
-interface ModalProps {
+type ModalProps = {
   showModal: boolean;
   containerClasses?: string;
   children: React.ReactNode;

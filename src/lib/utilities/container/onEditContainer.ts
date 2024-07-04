@@ -6,8 +6,8 @@ export function onEditContainer(
   editingContainer: UniqueIdentifier | null,
   containers: ContainerType[],
   setContainers: (containers: ContainerType[]) => void,
-  setEditingContainerName: (name: string) => void,
   setEditingContainer: (id: UniqueIdentifier | null) => void,
+  setEditingContainerName: (name: string) => void,
   setShowEditContainerModal: (show: boolean) => void
 ) {
   if (!editingContainer || !editingContainerName) return;
@@ -16,6 +16,6 @@ export function onEditContainer(
   container.title = editingContainerName;
   setContainers([...containers]);
   setEditingContainer(null);
-  setShowEditContainerModal(false);
   setEditingContainerName("");
+  setShowEditContainerModal(false);
 }

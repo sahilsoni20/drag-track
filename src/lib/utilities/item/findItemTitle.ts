@@ -4,9 +4,9 @@ import { findValueOfItems } from "../findValueOfItems";
 
 export function findItemTitle(
   containers: ContainerType[],
-  id: UniqueIdentifier | null
+  id: UniqueIdentifier | undefined
 ) {
-  const container = findValueOfItems(containers, id, "item");
+  const container = findValueOfItems(id, "item", containers);
   if (!container) return "";
   const item = container.items.find((item) => item.id === id);
   if (!item) return "";

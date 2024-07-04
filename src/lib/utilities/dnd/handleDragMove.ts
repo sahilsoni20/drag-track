@@ -19,8 +19,8 @@ export function handleDragMove(
     active.id !== over.id
   ) {
     //find the active container and hover that
-    const activeContainer = findValueOfItems(containers, active.id, "item");
-    const overContainer = findValueOfItems(containers, over.id, "item");
+    const activeContainer = findValueOfItems(active.id, "item", containers);
+    const overContainer = findValueOfItems(over.id, "item", containers);
 
     // if the active or over container is undefined (dosent exsist) then return
     if (!activeContainer || !overContainer) return;
@@ -70,13 +70,12 @@ export function handleDragMove(
     over &&
     active.id !== over.id
   ) {
-
     //find the active and over container
-    const activeContainer = findValueOfItems(containers, active.id, "item");
-    const overContainer = findValueOfItems(containers, over.id, "container");
+    const activeContainer = findValueOfItems(active.id, "item", containers);
+    const overContainer = findValueOfItems(over.id, "container", containers);
 
     //if the active or over is undefined we are going to return
-    if (!activeContainer === !overContainer) return;
+    if (!activeContainer || !overContainer) return; 
 
     //find the index of the active and over container
     const activeContainerIndex = containers.findIndex(
