@@ -1,16 +1,16 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { clsx } from "clsx";
 import { Grip } from "lucide-react";
+import clsx from "clsx";
 
-type ItemProps = {
+type ItemsType = {
   id: UniqueIdentifier;
   title: string;
   onEdit?: () => void;
 };
 
-const Items = ({ id, title, onEdit }: ItemProps) => {
+export function Items({ id, title, onEdit }: ItemsType) {
   const {
     attributes,
     listeners,
@@ -24,28 +24,30 @@ const Items = ({ id, title, onEdit }: ItemProps) => {
       type: "item",
     },
   });
+
   return (
     <div
-      {...attributes}
       onClick={onEdit}
       ref={setNodeRef}
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      {...attributes}
+      style={{
+        transition,
+        transform: CSS.Translate.toString(transform),
+      }}
       className={clsx(
         "bg-white shadow rounded-md w-full border border-slate-200 hover:border-gray-200 flex relative items-start p-3",
         isDragging && "opacity-50"
       )}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-1 items-center justify-between text-[15px] pr-5">
         {title}
-        <button
-          className="text-gray-400 hover:text-indigo-500 transition-colors p-1 cursor-grab"
-          {...listeners}
-        >
-          <Grip size={17} />
-        </button>
       </div>
+      <button
+        className="text-gray-400 hover:text-indigo-500 transition-colors p-1 cursor-grab"
+        {...listeners}
+      >
+        <Grip size={17} />
+      </button>
     </div>
   );
-};
-
-export default Items;
+}

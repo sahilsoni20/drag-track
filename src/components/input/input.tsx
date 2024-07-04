@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 type InputProps = {
   type: string;
@@ -9,14 +9,14 @@ type InputProps = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Input = ({
+export function Input({
   type,
   name,
   value = "",
   placeholder = "",
   onChange = () => {},
   shadow = false,
-}: InputProps) => {
+}: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -33,11 +33,9 @@ const Input = ({
       value={value}
       placeholder={placeholder}
       onChange={onChange}
-      className={`border p-2 w-full rounded md:rounded outline-none ${
+      className={`border p-2 w-full rounded md:rounded-md outline-none ${
         shadow ? "shadow" : ""
-      } text-xs md:text-sm`}
+      } text-xs  md:text-sm `}
     />
   );
-};
-
-export default Input;
+}
