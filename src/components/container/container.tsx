@@ -1,8 +1,12 @@
-import { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
+import { UniqueIdentifier } from "@dnd-kit/core";
+import { EllipsisVertical } from "lucide-react";
+import { Button } from "..";
+import { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
+import { AnimatePresence } from "framer-motion";
+import Menu from "../menu/menu";
 import clsx from "clsx";
-import Button from "../button/button";
 
 type ContainerProps = {
   id: UniqueIdentifier;
@@ -10,18 +14,19 @@ type ContainerProps = {
   title?: string;
   description?: string;
   onAddItem?: () => void;
-  onEditItem?: () => void;
-  onDeleteItem?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-const Container = ({
+export function Container({
   id,
   children,
   title,
   onAddItem,
-  onEditItem,
-  onDeleteItem,
-}: ContainerProps) => {
+  onEdit,
+  onDelete,
+}: ContainerProps) {
+  const [isMenuOpen, setMenuOpen] = useState(false);
   const {
     attributes,
     setNodeRef,
@@ -40,25 +45,50 @@ const Container = ({
     <div
       {...attributes}
       ref={setNodeRef}
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      style={{
+        transition,
+        transform: CSS.Translate.toString(transform),
+      }}
       className={clsx(
-        "w-full h-full p-4 bg-white rounded-xl flex flex-col gap-y-4", isDragging && 'opacity-50'
+        "w-full h-full border bg-slate-100 border-slate-200 rounded-lg flex flex-col ",
+        isDragging && "opacity-50"
       )}
     >
-        <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-y-1">
-                <h1 className="text-black text-xl">{title}</h1>
-            </div>
-            <button className="border p-2 text-xs rounded-xl shadow-lg hover:shadow-xl" {...listeners} >
-              drag
-            </button>
+      <div className="flex items-center justify-between rounded-t-lg pb-1">
+        <h1
+          className="text-slate-700 text-base font-semibold flex-1 cursor-grab p-4"
+          {...listeners}
+        >
+          {title}
+        </h1>
+        <div className="relative">
+          <button
+            className="text-slate-500 hover:text-gray-900 transition-colors pr-2 "
+            onClick={() => setMenuOpen(!isMenuOpen)}
+          >
+            <EllipsisVertical size={17} />
+          </button>
+          <AnimatePresence>
+            {isMenuOpen && (
+              <Menu
+                setMenuOpen={setMenuOpen}
+                isMenuOpen={isMenuOpen}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            )}
+          </AnimatePresence>
         </div>
-        {children}
-        <Button variant='ghost' onClick={onAddItem}>
-            Add Item
-        </Button>
+      </div>
+      <div className="pb-2 px-3 mb-auto">{children}</div>
+      <div className="px-4 pb-2 mt-auto">
+        <Button
+          variant="ghost"
+          onClick={onAddItem}
+          label="Add Card"
+          fullWidth={true}
+        />
+      </div>
     </div>
   );
-};
-
-export default Container;
+}
