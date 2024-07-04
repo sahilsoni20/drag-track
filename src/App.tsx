@@ -61,17 +61,6 @@ function App() {
   const [showAddContainerModal, setShowAddContainerModal] = useState(false);
   const [showAddItemModal, setShowAddItemModal] = useState(false);
 
-  const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
-    if (type === "container") {
-      return containers.find((container) => container.id === id);
-    }
-    if (type === "item") {
-      return containers.find((container) => {
-        return containers.find((item) => item.id === id);
-      });
-    }
-  };
-
   //dnd handlers
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -79,112 +68,6 @@ function App() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    const { id } = event;
-    setActiveId(id);
-  };
-
-  const handleDragMove = (event: DragMoveEvent) => {
-    const { active, over } = event;
-
-    //handle item sorting
-    if (
-      active.id.toString().includes("item") &&
-      over?.id.toString().includes("item") &&
-      active &&
-      over &&
-      active.id !== over.id
-    ) {
-      //find the active container and hover that
-      const activeContainer = findValueOfItems(active.id, "item");
-      const overContainer = findValueOfItems(over.id, "item");
-
-      // if the active or over container is undefined (dosent exsist) then return
-      if (!activeContainer || !overContainer) return;
-      const activeContainerIndex = containers.findIndex(
-        (container) => container.id === activeContainer.id
-      );
-      const overContainerIndex = containers.findIndex(
-        (container) => container.id === overContainer.id
-      );
-
-      //find the index of the active and over item
-      const activeItemIndex = activeContainer.items.findIndex(
-        (item) => item.id === active.id
-      );
-
-      const overItemIndex = overContainer.items.findIndex(
-        (item) => item.id === over.id
-      );
-
-      //check if dragging in the same container
-      if (activeContainerIndex === overContainerIndex) {
-        let newItems = [...containers];
-        newItems[activeContainerIndex].items = arrayMove(
-          newItems[activeContainerIndex].items,
-          activeItemIndex,
-          overItemIndex
-        );
-        setContainers(newItems);
-      } else {
-        //in different container
-        let newItems = [...containers];
-        const removedItems = newItems[activeContainerIndex].items.splice(
-          activeItemIndex,
-          1
-        );
-        newItems[overContainerIndex].items.splice(
-          overItemIndex,
-          0,
-          removedItems
-        );
-        setContainers(newItems);
-      }
-    }
-
-    //handling item drop into a container
-    if (
-      active.id.toString().includes("item") &&
-      over?.id.toString().includes("container") &&
-      active &&
-      over &&
-      active.id !== over.id
-    ) {
-      //find the active and over container
-      const activeContainer = findValueOfItems(active.id, "item");
-      const overContainer = findValueOfItems(over.id, "container");
-
-      //if the active or over is undefined we are going to return
-      if (!activeContainer === !overContainer) return;
-
-      //find the index of the active and over container
-      const activeContainerIndex = containers.findIndex(
-        (container) => container.id === activeContainer.id
-      );
-
-      const overContainerIndex = containers.findIndex(
-        (container) => container.id === overContainer.id
-      );
-
-      //find the index of active in active container
-      const activeItemIndex = activeContainer.items.findIndex(
-        (item) => item.id === active.id
-      );
-
-      //remove the active item from active container
-      let newItems = [...containers];
-      const [removedItems] = newItems[activeContainerIndex].splice(
-        activeItemIndex,
-        1
-      );
-      newItems[overContainerIndex].items.push(removedItems);
-      setContainers(newItems);
-    }
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {};
 
   return (
     <div className="mx-auto max-w-7xl">
