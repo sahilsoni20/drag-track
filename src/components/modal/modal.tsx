@@ -51,7 +51,7 @@ const Modal = ({
             >
               <div
                 className={clsx(
-                  `mx-3 overflow relative w-full transform rounded-lg border border-gray-300 bg-white p-6 text-left shadow-xl transition-all`,
+                  `mx-3 overflow relative w-full max-w-lg transform rounded-lg border border-gray-300 bg-white p-6 text-left shadow-xl transition-all`,
                   containerClasses
                 )}
               >
