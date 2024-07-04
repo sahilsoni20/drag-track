@@ -1,11 +1,11 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { ContainerType } from "../types";
 
-export const isContainerEmpty = (containerName: string): boolean => {
+export const isContainerNameEmpty = (containerName: string): boolean => {
   return containerName.trim() === "";
 };
 
-export const isItemEmpty = (ItemName: string): boolean => {
+export const isItemNameEmpty = (ItemName: string): boolean => {
   return ItemName.trim() === "";
 };
 
