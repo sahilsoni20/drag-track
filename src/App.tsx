@@ -54,12 +54,12 @@ function App() {
     }
   ]);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  // const [currentContainerId, setCurrentContainerId] =
-  //   useState<UniqueIdentifier>();
-  // const [containerName, setContainerName] = useState("");
-  // const [itemName, setItemName] = useState("");
-  // const [showAddContainerModal, setShowAddContainerModal] = useState(false);
-  // const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [currentContainerId, setCurrentContainerId] =
+    useState<UniqueIdentifier>();
+  const [containerName, setContainerName] = useState("");
+  const [itemName, setItemName] = useState("");
+  const [showAddContainerModal, setShowAddContainerModal] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
     if (type === "container") {
